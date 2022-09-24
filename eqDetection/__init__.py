@@ -32,17 +32,44 @@ def extract():
 
 
 def view(result):
+    data ={
+        "Date": "",
+        "Time": "",
+        "Magnitude": "",
+        "Depth": "",
+        "Location":
+            {
+                "LS": "",
+                "BT": ""
+            },
+        "Center": "",
+        "Remark": ""
+    }
+
     if result is not None:
-        print(result)
+        source = BeautifulSoup(result, "html.parser")
+        classSpan = "col-md-6 col-xs-6 gempabumi-detail no-padding"
+        data["Date"] = source.find("div", {"class": classSpan}).text.split("\n")[2].split(", ")[0]
+        data["Time"] = source.find("div", {"class": classSpan}).text.split("\n")[2].split(", ")[1]
+        data["Magnitude"] = source.find("div", {"class": classSpan}).text.split("\n")[3]
+        data["Depth"] = source.find("div", {"class": classSpan}).text.split("\n")[4]
+        data["Location"]['LS'] = source.find("div", {"class": classSpan}).text.split("\n")[5].split(" - ")[0]
+        data["Location"]['BT'] = source.find("div", {"class": classSpan}).text.split("\n")[5].split(" - ")[1]
+        data["Center"] = source.find("div", {"class": classSpan}).text.split("\n")[6]
+        data["Remark"] = source.find("div", {"class": classSpan}).text.split("\n")[7]
+        print("Last earthquake detected")
+        print(data["Date"])
+        print(data["Time"])
+        print(data["Magnitude"])
+        print(data["Depth"])
+        print(data["Location"])
+        print(data["Center"])
+        print(data["Remark"])
         print("Finished")
     else:
         print("None")
         print("Finished")
-    # print("Last earthquake detected")
-    # print(f"Date: {result['datetime']['date']}")
-    # print(f"Time: {result['datetime']['time']}")
-    # print(f"Magnitude: {result['magnitude']}")
-    # print(f"Depth: {result['depth']}")
+
     # print(f"Location: LS = {result['location']['ls']}, BT = {result['location']['bt']}")
     # print(f"Center: {result['center']}")
     # print(f"Remark: {result['remark']}")
