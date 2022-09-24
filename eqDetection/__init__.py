@@ -39,8 +39,8 @@ def view(result):
         "Depth": "",
         "Location":
             {
-                "LS": "",
-                "BT": ""
+                "Long": "",
+                "Lat": ""
             },
         "Center": "",
         "Remark": ""
@@ -49,22 +49,28 @@ def view(result):
     if result is not None:
         source = BeautifulSoup(result, "html.parser")
         classSpan = "col-md-6 col-xs-6 gempabumi-detail no-padding"
-        data["Date"] = source.find("div", {"class": classSpan}).text.split("\n")[2].split(", ")[0]
-        data["Time"] = source.find("div", {"class": classSpan}).text.split("\n")[2].split(", ")[1]
-        data["Magnitude"] = source.find("div", {"class": classSpan}).text.split("\n")[3]
-        data["Depth"] = source.find("div", {"class": classSpan}).text.split("\n")[4]
-        data["Location"]['LS'] = source.find("div", {"class": classSpan}).text.split("\n")[5].split(" - ")[0]
-        data["Location"]['BT'] = source.find("div", {"class": classSpan}).text.split("\n")[5].split(" - ")[1]
-        data["Center"] = source.find("div", {"class": classSpan}).text.split("\n")[6]
-        data["Remark"] = source.find("div", {"class": classSpan}).text.split("\n")[7]
+        source = source.find("div",{"class": classSpan})
+        source = source.findChildren("li")
         print("Last earthquake detected")
-        print(data["Date"])
-        print(data["Time"])
-        print(data["Magnitude"])
-        print(data["Depth"])
-        print(data["Location"])
-        print(data["Center"])
-        print(data["Remark"])
+        for i in range(len(source)):
+            if i == 0:
+                sourceList = source[i].text.split(", ")
+                data["Date"] = sourceList[0]
+                data["Time"] = sourceList[1]
+            elif i == 1:
+                data["Magnitude"] = source[i].text
+            elif i == 2:
+                data["Depth"] = source[i].text
+            elif i == 3:
+                sourceList = source[i].text.split(" - ")
+                data["Location"]["Long"] = sourceList[0]
+                data["Location"]["Lat"] = sourceList[1]
+            elif i == 4:
+                data["Center"] = source[i].text
+            elif i == 5:
+                data["Remark"] = source[i].text
+        for i in data:
+            print(f"{i}: {data[i]}")
         print("Finished")
     else:
         print("None")
