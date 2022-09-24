@@ -75,7 +75,3 @@ def view(result):
     else:
         print("None")
         print("Finished")
-
-    # print(f"Location: LS = {result['location']['ls']}, BT = {result['location']['bt']}")
-    # print(f"Center: {result['center']}")
-    # print(f"Remark: {result['remark']}")
